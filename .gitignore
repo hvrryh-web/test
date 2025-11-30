@@ -1,0 +1,18 @@
+# Ignore Python artifacts
+__pycache__/
+*.py[cod]
+
+# Virtual environment
+.venv/
+
+# Agent logs and generated excel updates
+*/agent/agent.log
+*/resources/*.updated
+resources/credentials.xlsx
+exports/
+
+# Vagrant & VM states
+.vagrant/
+
+# Local overrides
+local.tmp

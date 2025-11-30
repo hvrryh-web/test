@@ -1,0 +1,13 @@
+{
+  "agent_user": "agent",
+  "data_dir": "/home/vagrant/workspace/resources",
+  "tasks_file": "sample_tasks.xlsx",
+  "log_file": "/home/vagrant/workspace/agent/agent.log",
+  "metrics_port": 8000,
+  "vault": {
+    "addr": "http://127.0.0.1:8200",
+    "token_env_var": "VAULT_TOKEN",
+    "secrets_path": "secret/data/myapp"
+  },
+  "mode": "service"
+}
