@@ -22,7 +22,7 @@ import os
 from dataclasses import dataclass
 from typing import List, Optional
 import sys
-from jsonschema import validate, ValidationError
+from jsonschema import validate, ValidationError, FormatChecker
 
 import requests
 
@@ -57,8 +57,8 @@ TASK_SCHEMA = {
     'properties': {
         'task_id': {'type': 'string'},
         'description': {'type': 'string'},
-        'status': {'type': 'string'},
-        'due_date': {'type': 'string'},
+        'status': {'type': 'string', 'enum': ['pending', 'in-progress', 'completed', 'failed']},
+        'due_date': {'type': 'string', 'format': 'date'},
     },
     'required': ['task_id', 'description', 'status', 'due_date'],
 }
@@ -76,7 +76,20 @@ def generate_tasks_with_openai(count: int = 1) -> List[GeneratedTask]:
             if repo_root not in sys.path:
                 sys.path.insert(0, repo_root)
             from agent.vault_client import VaultClient
-            vault_path = os.environ.get('VAULT_SECRETS_PATH', 'secret/data/myapp')
+            # If agent config path exists, prefer the 'vault.secrets_path' specified there
+            vault_path = os.environ.get('VAULT_SECRETS_PATH')
+            if not vault_path:
+                config_path = os.environ.get('AGENT_CONFIG_PATH') or os.path.join(repo_root, 'agent', 'agent_config.json')
+                if os.path.exists(config_path):
+                    import json as _json
+                    try:
+                        cfg = _json.load(open(config_path, 'r', encoding='utf-8'))
+                        vault_cfg = cfg.get('vault') or {}
+                        vault_path = vault_cfg.get('secrets_path')
+                    except Exception:
+                        vault_path = None
+            if not vault_path:
+                vault_path = 'secret/data/myapp'
             vc = VaultClient()
             # Accept either key name variants
             key = vc.get_secret_value(vault_path, 'OPENAI_API_KEY') or vc.get_secret_value(vault_path, 'openai_api_key')
@@ -103,7 +116,7 @@ def generate_tasks_with_openai(count: int = 1) -> List[GeneratedTask]:
     for p in payload:
         # validate raw dict before converting
         try:
-            validate(instance=p, schema=TASK_SCHEMA)
+            validate(instance=p, schema=TASK_SCHEMA, format_checker=FormatChecker())
         except ValidationError as e:
             logger.warning('Skipping invalid task from OpenAI response: %s', e)
             continue
@@ -133,7 +146,7 @@ def generate_tasks_dryrun(count: int = 1) -> List[GeneratedTask]:
 def validate_task_dict(task_dict: dict) -> bool:
     """Validate a dict against the TASK_SCHEMA. Returns True if valid, else False."""
     try:
-        validate(instance=task_dict, schema=TASK_SCHEMA)
+        validate(instance=task_dict, schema=TASK_SCHEMA, format_checker=FormatChecker())
         return True
     except ValidationError:
         return False

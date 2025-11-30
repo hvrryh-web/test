@@ -9,6 +9,8 @@ PROJECT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 TOOLS_DIR = os.path.join(PROJECT_DIR, 'tools')
 if TOOLS_DIR not in sys.path:
     sys.path.insert(0, TOOLS_DIR)
+if PROJECT_DIR not in sys.path:
+    sys.path.insert(0, PROJECT_DIR)
 
 import chatgpt_adapter as cga
 import importlib
@@ -57,6 +59,16 @@ def test_validate_bad_task():
         'due_date': '2025-12-01'
     }
     assert not cga.validate_task_dict(bad)
+
+
+def test_validate_bad_status_and_date():
+    invalid = {
+        'task_id': 'T003',
+        'description': 'Summarize sample_data.xlsx',
+        'status': 'running',  # invalid status
+        'due_date': '2025-13-01'  # invalid month
+    }
+    assert not cga.validate_task_dict(invalid)
 
 
 def test_generate_tasks_with_openai_from_vault(monkeypatch, tmp_path):

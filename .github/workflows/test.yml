@@ -28,7 +28,11 @@ jobs:
         run: |
           docker run --rm -d --name vault-dev -e VAULT_DEV_ROOT_TOKEN_ID=root -p 8200:8200 vault:1.14.0 server -dev -dev-root-token-id=root
 
-      - name: Run tests
+      - name: Run tests (including integration tests)
+        env:
+          RUN_INTEGRATION_TESTS: 'true'
+          VAULT_ADDR: 'http://127.0.0.1:8200'
+          VAULT_TOKEN: 'root'
         run: |
           pytest -q
       - name: Tear down Vault (dev) container
