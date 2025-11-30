@@ -14,6 +14,7 @@ This file contains concise, repository-specific guidance for AI coding agents (C
 - agent/mcp_server.py -- Minimal REST endpoint to add tasks to `resources/sample_tasks.xlsx`.
 - agent/vault_client.py -- Fetch secrets from HashiCorp Vault or environment fallbacks.
 - resources/ -- input data (sample_tasks.xlsx, sample_data.xlsx) and generator script `generate_sample_xlsx.py`.
+- tools/chatgpt_adapter.py -- minimal adapter script that demonstrates how to generate tasks via OpenAI (or dry-run) and POST them to the MCP server (`/tasks`).
 
 ## Safe Workflows / How to run
 - Local dev (quick):
@@ -60,6 +61,11 @@ This file contains concise, repository-specific guidance for AI coding agents (C
 - If agent actions fail with pandas errors, inspect `agent/tasks.py` and `resources/sample_data.xlsx` shapes; pandas `read_excel` can return a `dict` instead of a `DataFrame` when multiple sheets are requested — prefer specifying `sheet_name` explicitly or validate the loaded object type before calling `df.select_dtypes(...)`.
 - Use `AGENT_CONFIG_PATH` to point to a temp config when running tests or debugging locally.
 - Check `agent/agent.log` for structured JSON logs and 'taskName' entries used in logs — helpful for tracing task executions.
+
+## ChatGPT / OpenAI integration
+- `tools/chatgpt_adapter.py` demonstrates generating tasks with OpenAI and posting them to MCP (`POST /tasks`).
+- Prefer the script's `--dry-run` mode during development; provide `OPENAI_API_KEY` or store the key in Vault to use OpenAI.
+- Use `AGENT_API_TOKEN` for authentication — the MCP server checks `X-AGENT-TOKEN` in the request header.
 
 ## Adding new features (concise checklist)
 1. Add helper in `agent/tasks.py` or `agent/actions.py` depending on scope.

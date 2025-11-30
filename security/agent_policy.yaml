@@ -15,6 +15,8 @@ allowed_actions:
       - 'python resources/generate_sample_xlsx.py'
       - 'generate_sample_xlsx.py'
       - '-m agent.agent_runner'
+      - 'python tools/chatgpt_adapter.py'
+      - 'python -m agent.mcp_server'
       - 'sqlite3'
       - 'python agent/actions.py'
       - 'aws'
@@ -32,3 +34,4 @@ whitelisted_scripts:
   - 'scripts/bootstrap_local.sh'
   - 'scripts/run_tests.sh'
   - 'scripts/some_safe_task.sh'
+  - 'tools/chatgpt_adapter.py'
