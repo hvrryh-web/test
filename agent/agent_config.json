@@ -10,4 +10,5 @@
     "secrets_path": "secret/data/myapp"
   },
   "mode": "service"
+  ,"api_host":"0.0.0.0", "api_port": 8080, "api_token":"changeme"
 }

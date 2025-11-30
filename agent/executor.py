@@ -11,6 +11,7 @@ import resource
 from typing import Optional
 
 import ruamel.yaml as yaml
+import shutil
 
 POLICY_PATH = os.path.join(os.path.dirname(__file__), '..', 'security', 'agent_policy.yaml')
 
@@ -94,3 +95,40 @@ def run_safe_script(script_path: str, timeout: int = 30) -> dict:
         logger.warning('Script not found: %s', script_path)
         return {'status': 'file_missing'}
     return run_safe_command(f'bash {script_path}', timeout=timeout)
+
+
+def run_in_docker(command: str, image: str = 'python:3.12-slim', timeout: int = 60, cpus: float = 0.5, mem: str = '512m') -> dict:
+    """Run a command inside a docker container for sandboxing. Returns similar output dict.
+    This is a best-effort fallback; requires docker installed on host.
+    """
+    if not shutil.which('docker'):
+        return {'status': 'error', 'reason': 'docker-not-available'}
+    # Basic policy check: ensure command is allowed
+    policy = Policy()
+    if not policy.allows_command(command):
+        logger.warning('Command not allowed by policy: %s', command)
+        return {'status': 'denied', 'reason': 'policy'}
+    # Build docker run command
+    docker_cmd = [
+        'docker', 'run', '--rm',
+        '--cpus', str(cpus),
+        '--memory', str(mem),
+        '--security-opt', f'seccomp={os.path.join(os.path.dirname(__file__), "..", "security", "seccomp.json")}',
+        image, 'bash', '-lc', command
+    ]
+    try:
+        start = time.time()
+        proc = subprocess.run(docker_cmd, capture_output=True, text=True, timeout=timeout)
+        duration = time.time() - start
+        return {
+            'status': 'ok' if proc.returncode == 0 else 'failed',
+            'returncode': proc.returncode,
+            'stdout': proc.stdout,
+            'stderr': proc.stderr,
+            'duration': duration,
+        }
+    except subprocess.TimeoutExpired as e:
+        return {'status': 'timeout', 'reason': str(e)}
+    except Exception as e:
+        logger.exception('Docker execution failed: %s', e)
+        return {'status': 'error', 'reason': str(e)}

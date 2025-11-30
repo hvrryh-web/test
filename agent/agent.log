@@ -156,3 +156,45 @@
 {"asctime": "2025-11-30 11:32:05,146", "levelname": "INFO", "name": "agent.actions", "message": "Email stub wrote message to /workspaces/test/exports/email_example_example.com_1764502325.json", "taskName": null}
 {"asctime": "2025-11-30 11:32:05,146", "levelname": "INFO", "name": "root", "message": "Task T996: pending -> completed", "taskName": null}
 {"asctime": "2025-11-30 11:32:05,157", "levelname": "INFO", "name": "root", "message": "Wrote updated tasks to /workspaces/test/resources/sample_tasks.updated.xlsx", "taskName": null}
+{"asctime": "2025-11-30 11:41:29,558", "levelname": "INFO", "name": "agent.metrics_server", "message": "Metrics server started on port 8000", "taskName": null}
+{"asctime": "2025-11-30 11:41:29,560", "levelname": "INFO", "name": "root", "message": "Vault not configured or unreachable; using environment fallbacks", "taskName": null}
+{"asctime": "2025-11-30 11:41:29,560", "levelname": "INFO", "name": "root", "message": "Reading tasks from /workspaces/test/resources/sample_tasks.xlsx", "taskName": null}
+{"asctime": "2025-11-30 11:41:29,656", "levelname": "INFO", "name": "root", "message": "Task T001: pending -> completed", "taskName": null}
+{"asctime": "2025-11-30 11:41:29,656", "levelname": "INFO", "name": "root", "message": "Task T002: pending -> completed", "taskName": null}
+{"asctime": "2025-11-30 11:41:29,656", "levelname": "INFO", "name": "root", "message": "Task T003: pending -> completed", "taskName": null}
+{"asctime": "2025-11-30 11:41:29,656", "levelname": "INFO", "name": "root", "message": "Task T004: pending -> completed", "taskName": null}
+{"asctime": "2025-11-30 11:41:29,656", "levelname": "INFO", "name": "root", "message": "Task T005: pending -> completed", "taskName": null}
+{"asctime": "2025-11-30 11:41:29,657", "levelname": "INFO", "name": "root", "message": "Starting summarize action for T999", "taskName": null}
+{"asctime": "2025-11-30 11:41:29,671", "levelname": "INFO", "name": "agent.tasks", "message": "Wrote summary to /workspaces/test/agent/../resources/summary.xlsx", "taskName": null}
+{"asctime": "2025-11-30 11:41:29,671", "levelname": "INFO", "name": "root", "message": "Wrote summary to /workspaces/test/agent/../resources/summary.xlsx", "taskName": null}
+{"asctime": "2025-11-30 11:41:29,671", "levelname": "INFO", "name": "root", "message": "Task T999: pending -> completed", "taskName": null}
+{"asctime": "2025-11-30 11:41:29,673", "levelname": "INFO", "name": "root", "message": "Task T998: pending -> completed", "taskName": null}
+{"asctime": "2025-11-30 11:41:29,679", "levelname": "INFO", "name": "agent.actions", "message": "Exported dataframe to local exports folder as a S3 stub: /workspaces/test/exports/export_T997.csv", "taskName": null}
+{"asctime": "2025-11-30 11:41:29,679", "levelname": "INFO", "name": "root", "message": "Task T997: pending -> completed", "taskName": null}
+{"asctime": "2025-11-30 11:41:29,679", "levelname": "INFO", "name": "agent.actions", "message": "Email stub wrote message to /workspaces/test/exports/email_example_example.com_1764502889.json", "taskName": null}
+{"asctime": "2025-11-30 11:41:29,679", "levelname": "INFO", "name": "root", "message": "Task T996: pending -> completed", "taskName": null}
+{"asctime": "2025-11-30 11:41:29,684", "levelname": "INFO", "name": "agent.actions", "message": "Exported dataframe to local exports folder as a S3 stub: /workspaces/test/exports/export_T995.csv", "taskName": null}
+{"asctime": "2025-11-30 11:41:29,684", "levelname": "INFO", "name": "root", "message": "Task T995: pending -> completed", "taskName": null}
+{"asctime": "2025-11-30 11:41:29,684", "levelname": "INFO", "name": "root", "message": "Task T994: pending -> completed", "taskName": null}
+{"asctime": "2025-11-30 11:41:29,693", "levelname": "INFO", "name": "root", "message": "Wrote updated tasks to /workspaces/test/resources/sample_tasks.updated.xlsx", "taskName": null}
+{"asctime": "2025-11-30 11:45:44,963", "levelname": "INFO", "name": "agent.metrics_server", "message": "Metrics server started on port 8000", "taskName": null}
+{"asctime": "2025-11-30 11:45:44,965", "levelname": "INFO", "name": "root", "message": "Vault not configured or unreachable; using environment fallbacks", "taskName": null}
+{"asctime": "2025-11-30 11:45:44,965", "levelname": "INFO", "name": "root", "message": "Reading tasks from /workspaces/test/resources/sample_tasks.xlsx", "taskName": null}
+{"asctime": "2025-11-30 11:45:45,062", "levelname": "INFO", "name": "root", "message": "Task T001: pending -> completed", "taskName": null}
+{"asctime": "2025-11-30 11:45:45,062", "levelname": "INFO", "name": "root", "message": "Task T002: pending -> completed", "taskName": null}
+{"asctime": "2025-11-30 11:45:45,062", "levelname": "INFO", "name": "root", "message": "Task T003: pending -> completed", "taskName": null}
+{"asctime": "2025-11-30 11:45:45,062", "levelname": "INFO", "name": "root", "message": "Task T004: pending -> completed", "taskName": null}
+{"asctime": "2025-11-30 11:45:45,062", "levelname": "INFO", "name": "root", "message": "Task T005: pending -> completed", "taskName": null}
+{"asctime": "2025-11-30 11:45:45,062", "levelname": "INFO", "name": "root", "message": "Starting summarize action for T999", "taskName": null}
+{"asctime": "2025-11-30 11:45:45,075", "levelname": "INFO", "name": "agent.tasks", "message": "Wrote summary to /workspaces/test/agent/../resources/summary.xlsx", "taskName": null}
+{"asctime": "2025-11-30 11:45:45,075", "levelname": "INFO", "name": "root", "message": "Wrote summary to /workspaces/test/agent/../resources/summary.xlsx", "taskName": null}
+{"asctime": "2025-11-30 11:45:45,076", "levelname": "INFO", "name": "root", "message": "Task T999: pending -> completed", "taskName": null}
+{"asctime": "2025-11-30 11:45:45,077", "levelname": "INFO", "name": "root", "message": "Task T998: pending -> completed", "taskName": null}
+{"asctime": "2025-11-30 11:45:45,083", "levelname": "INFO", "name": "agent.actions", "message": "Exported dataframe to local exports folder as a S3 stub: /workspaces/test/exports/export_T997.csv", "taskName": null}
+{"asctime": "2025-11-30 11:45:45,083", "levelname": "INFO", "name": "root", "message": "Task T997: pending -> completed", "taskName": null}
+{"asctime": "2025-11-30 11:45:45,083", "levelname": "INFO", "name": "agent.actions", "message": "Email stub wrote message to /workspaces/test/exports/email_example_example.com_1764503145.json", "taskName": null}
+{"asctime": "2025-11-30 11:45:45,083", "levelname": "INFO", "name": "root", "message": "Task T996: pending -> completed", "taskName": null}
+{"asctime": "2025-11-30 11:45:45,089", "levelname": "INFO", "name": "agent.actions", "message": "Exported dataframe to local exports folder as a S3 stub: /workspaces/test/exports/export_T995.csv", "taskName": null}
+{"asctime": "2025-11-30 11:45:45,089", "levelname": "INFO", "name": "root", "message": "Task T995: pending -> completed", "taskName": null}
+{"asctime": "2025-11-30 11:45:45,089", "levelname": "INFO", "name": "root", "message": "Task T994: pending -> completed", "taskName": null}
+{"asctime": "2025-11-30 11:45:45,098", "levelname": "INFO", "name": "root", "message": "Wrote updated tasks to /workspaces/test/resources/sample_tasks.updated.xlsx", "taskName": null}

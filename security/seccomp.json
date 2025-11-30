@@ -1,0 +1,12 @@
+{
+  "defaultAction": "SCMP_ACT_ERRNO",
+  "architectures": [ "SCMP_ARCH_X86_64" ],
+  "syscalls": [
+    {
+      "names": [
+        "read","write","exit","futex","nanosleep","rt_sigreturn","rt_sigaction","lseek","fcntl","close","stat","lstat","fstat","open","openat","uname","access","getdents64","getcwd","getpid","kill","gettimeofday","clock_gettime"
+      ],
+      "action": "SCMP_ACT_ALLOW"
+    }
+  ]
+}

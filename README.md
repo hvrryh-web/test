@@ -7,6 +7,9 @@ Key components:
 - A Python agent harness that reads/writes Excel files and processes tasks
 - Sample resources (Excel generator) and tests
 - Documentation in `docs/` for setup and security
+ - Vault integration via `agent/vault_client.py` and `docs/vault_setup.md`
+ - A sandboxed command executor `agent/executor.py` and policy file `security/agent_policy.yaml`
+ - Monitoring via Prometheus metrics and structured logging
 
 See `docs/agent_setup.md`, `docs/excel_resources.md`, and `docs/vm_connection.md` for details.
 
@@ -19,7 +22,9 @@ source .venv/bin/activate
 2. Generate sample Excel files and run the agent:
 ```
 python resources/generate_sample_xlsx.py
-python agent/agent_runner.py --process-tasks
+ # If you run locally, override the config to point to the workspace resources:
+ export AGENT_CONFIG_PATH=$(pwd)/agent/agent_config.json
+ python -m agent.agent_runner --process-tasks
 ```
 3. Run tests:
 ```

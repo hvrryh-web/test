@@ -69,6 +69,35 @@ class VaultClient:
 def get_credential(path: str, key: str, env_var: Optional[str] = None) -> Optional[str]:
     if env_var and os.environ.get(env_var):
         return os.environ.get(env_var)
+
+
+    def get_aws_credentials(path: str, env_prefix: str = 'AWS') -> Dict[str, str] | None:
+        try:
+            client = VaultClient()
+            data = client.get_raw_secret(path)
+            # Expected keys: aws_access_key_id, aws_secret_access_key, aws_session_token (optional)
+            aws_key = data.get('aws_access_key_id') or data.get('aws_access_key')
+            aws_secret = data.get('aws_secret_access_key') or data.get('aws_secret_key')
+            aws_token = data.get('aws_session_token')
+            if aws_key and aws_secret:
+                return {
+                    'aws_access_key_id': aws_key,
+                    'aws_secret_access_key': aws_secret,
+                    'aws_session_token': aws_token,
+                }
+        except Exception:
+            pass
+        # fallback to env vars
+        k = os.environ.get(f'{env_prefix}_ACCESS_KEY_ID') or os.environ.get('AWS_ACCESS_KEY_ID')
+        s = os.environ.get(f'{env_prefix}_SECRET_ACCESS_KEY') or os.environ.get('AWS_SECRET_ACCESS_KEY')
+        t = os.environ.get(f'{env_prefix}_SESSION_TOKEN') or os.environ.get('AWS_SESSION_TOKEN')
+        if k and s:
+            return {
+                'aws_access_key_id': k,
+                'aws_secret_access_key': s,
+                'aws_session_token': t,
+            }
+        return None
     try:
         client = VaultClient()
         return client.get_secret_value(path, key)

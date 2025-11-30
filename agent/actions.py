@@ -26,7 +26,33 @@ def export_dataframe_to_s3(df: pd.DataFrame, export_name: str, bucket: Optional[
     """
     try:
         import boto3
-        s3 = boto3.client('s3')
+        # Attempt to dynamically obtain AWS credentials from Vault
+        from .vault_client import get_aws_credentials
+        aws_creds = get_aws_credentials(os.environ.get('VAULT_SECRETS_PATH', 'secret/data/myapp'))
+        session_params = {}
+        if aws_creds:
+            session_params = aws_creds
+        # Else boto3 uses environment or instance credentials
+        s3 = boto3.client('s3', **session_params)
+        # Attempt to fetch AWS creds from Vault
+        from .vault_client import get_aws_credentials
+        aws_creds = get_aws_credentials(os.environ.get('VAULT_SECRETS_PATH', 'secret/data/myapp'))
+        session_params = {}
+        if aws_creds:
+            session_params = aws_creds
+        elif os.environ.get('AWS_ACCESS_KEY_ID'):
+            session_params = {}
+        s3 = boto3.client('s3', **session_params)
+        # Try to source AWS credentials from Vault if available
+        from .vault_client import VaultClient
+        client = VaultClient()
+        aws_key = client.get_secret_value(os.environ.get('VAULT_SECRETS_PATH', 'secret/data/myapp'), 'aws_access_key')
+        aws_secret = client.get_secret_value(os.environ.get('VAULT_SECRETS_PATH', 'secret/data/myapp'), 'aws_secret_key')
+        session_params = {}
+        if aws_key and aws_secret:
+            session_params['aws_access_key_id'] = aws_key
+            session_params['aws_secret_access_key'] = aws_secret
+        s3 = boto3.client('s3', **session_params)
         local_tmp = os.path.join(tempfile.gettempdir(), f'{export_name}.csv')
         df.to_csv(local_tmp, index=False)
         if not bucket:

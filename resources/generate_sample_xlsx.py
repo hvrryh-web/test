@@ -54,6 +54,19 @@ def generate_tasks(path: Path):
         "status": "pending",
         "due_date": (today + timedelta(days=2)).date(),
     })
+    # Parquet export task and S3 upload task (S3 will use dynamic credentials if present)
+    rows.append({
+        "task_id": "T995",
+        "description": "EXPORT_PARQUET: sample_data",
+        "status": "pending",
+        "due_date": (today + timedelta(days=8)).date(),
+    })
+    rows.append({
+        "task_id": "T994",
+        "description": "S3_UPLOAD: sample_data.parquet",
+        "status": "pending",
+        "due_date": (today + timedelta(days=9)).date(),
+    })
     df = pd.DataFrame(rows)
     df.to_excel(path, index=False)
     print(f"Wrote {path}")
@@ -69,6 +82,12 @@ def generate_data(path: Path):
         })
     df = pd.DataFrame(rows)
     df.to_excel(path, index=False)
+    # Write parquet version for export and streaming examples
+    try:
+        df.to_parquet(path.with_suffix('.parquet'), index=False)
+        print(f"Wrote {path.with_suffix('.parquet')}")
+    except Exception:
+        pass
     print(f"Wrote {path}")
 
 

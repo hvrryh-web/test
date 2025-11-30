@@ -7,6 +7,12 @@ DEBIAN_FRONTEND=noninteractive apt-get -y upgrade
 
 # Install common packages
 DEBIAN_FRONTEND=noninteractive apt-get -y install python3 python3-pip python3-venv git curl unzip openssh-server rsync build-essential vim
+# Docker & docker-compose for container-based sandboxing
+DEBIAN_FRONTEND=noninteractive apt-get -y install ca-certificates gnupg lsb-release
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+apt-get update && apt-get -y install docker-ce docker-ce-cli containerd.io
+pip install docker-compose
 
 # Create agent user and setup SSH
 AGENT_USER="agent"

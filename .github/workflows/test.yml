@@ -23,7 +23,15 @@ jobs:
       - name: Generate sample resources
         run: |
           python resources/generate_sample_xlsx.py
+          # Start a minimal Vault dev server (in the background) so tests that rely on Vault fallback work
+      - name: Spin up Vault (dev) for tests
+        run: |
+          docker run --rm -d --name vault-dev -e VAULT_DEV_ROOT_TOKEN_ID=root -p 8200:8200 vault:1.14.0 server -dev -dev-root-token-id=root
 
       - name: Run tests
         run: |
           pytest -q
+      - name: Tear down Vault (dev) container
+        if: always()
+        run: |
+          docker stop vault-dev || true
