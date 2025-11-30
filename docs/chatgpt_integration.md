@@ -17,7 +17,8 @@ python -m agent.mcp_server
 ```
 
 ## OpenAI API keys and Vault
-- Use environment variable `OPENAI_API_KEY` or store it in Vault. The script reads `OPENAI_API_KEY` from environment and falls back to dry-run if not present.
+- Use environment variable `OPENAI_API_KEY` or store it in Vault. The adapter reads `OPENAI_API_KEY` from the environment; if missing the adapter attempts to read it from Vault using `VAULT_SECRETS_PATH`.
+- If still unavailable the adapter falls back to `--dry-run` mode.
 - To use the Vault path, add keys to the Vault and update `agent_config.json` `vault.secrets_path` and run the Vault dev container with `docker-compose` for local tests.
 
 ## Run the sample adapter
@@ -43,6 +44,6 @@ python tools/chatgpt_adapter.py --count 2 --host http://localhost --port 8080
 ## What to add for production
 - Rotate API tokens and use TLS/HTTPS for MCP communication.
 - Add a Vault-backed secrets retrieval flow for `OPENAI_API_KEY` or other keys.
-- Add a robust OpenAI prompt/response validation step that enforces an exact JSON schema (e.g., JSON schema validation step) before posting tasks.
+- The adapter already includes a JSON schema validation step: tasks are validated against a minimal schema (task_id, description, status, due_date) before posting.
 
 If you'd like, I can add a Vault-backed API-key fetch example and a schema validation step.

@@ -21,6 +21,8 @@ import logging
 import os
 from dataclasses import dataclass
 from typing import List, Optional
+import sys
+from jsonschema import validate, ValidationError
 
 import requests
 
@@ -50,12 +52,40 @@ DEFAULT_PROMPT = (
 )
 
 
+TASK_SCHEMA = {
+    'type': 'object',
+    'properties': {
+        'task_id': {'type': 'string'},
+        'description': {'type': 'string'},
+        'status': {'type': 'string'},
+        'due_date': {'type': 'string'},
+    },
+    'required': ['task_id', 'description', 'status', 'due_date'],
+}
+
+
 def generate_tasks_with_openai(count: int = 1) -> List[GeneratedTask]:
     if not OPENAI_AVAILABLE:
         raise RuntimeError('openai package is not available. Install openai or run in dry-run mode')
     key = os.environ.get('OPENAI_API_KEY')
     if not key:
-        raise RuntimeError('OPENAI_API_KEY must be set in environment')
+        # Try to fetch from Vault (optional)
+        try:
+            # Ensure agent package is importable
+            repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+            if repo_root not in sys.path:
+                sys.path.insert(0, repo_root)
+            from agent.vault_client import VaultClient
+            vault_path = os.environ.get('VAULT_SECRETS_PATH', 'secret/data/myapp')
+            vc = VaultClient()
+            # Accept either key name variants
+            key = vc.get_secret_value(vault_path, 'OPENAI_API_KEY') or vc.get_secret_value(vault_path, 'openai_api_key')
+            if key:
+                logger.info('OpenAI key retrieved from Vault')
+        except Exception:
+            key = None
+    if not key:
+        raise RuntimeError('OPENAI_API_KEY must be set in environment or Vault')
     openai.api_key = key
 
     prompt = DEFAULT_PROMPT + f"\nReturn {count} tasks as a JSON list."
@@ -71,6 +101,12 @@ def generate_tasks_with_openai(count: int = 1) -> List[GeneratedTask]:
 
     tasks = []
     for p in payload:
+        # validate raw dict before converting
+        try:
+            validate(instance=p, schema=TASK_SCHEMA)
+        except ValidationError as e:
+            logger.warning('Skipping invalid task from OpenAI response: %s', e)
+            continue
         tasks.append(GeneratedTask(
             task_id=str(p.get('task_id')),
             description=str(p.get('description')),
@@ -92,6 +128,15 @@ def generate_tasks_dryrun(count: int = 1) -> List[GeneratedTask]:
             due_date=(datetime.date.today()).isoformat()
         ))
     return tasks
+
+
+def validate_task_dict(task_dict: dict) -> bool:
+    """Validate a dict against the TASK_SCHEMA. Returns True if valid, else False."""
+    try:
+        validate(instance=task_dict, schema=TASK_SCHEMA)
+        return True
+    except ValidationError:
+        return False
 
 
 def post_task_to_mcp(host: str, port: int, token: Optional[str], task: GeneratedTask) -> requests.Response:
