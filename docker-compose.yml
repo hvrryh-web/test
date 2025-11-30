@@ -37,3 +37,16 @@ services:
     volumes:
       - .:/workspace
     command: ["python", "-m", "agent.agent_runner", "--watch"]
+  mcp:
+    build: .
+    environment:
+      - AGENT_CONFIG_PATH=/workspace/agent/agent_config.json
+      - AGENT_API_TOKEN=changeme
+      - VAULT_ADDR=http://vault:8200
+    ports:
+      - '8080:8080'
+    depends_on:
+      - vault
+    volumes:
+      - .:/workspace
+    command: ["python", "-m", "agent.mcp_server"]

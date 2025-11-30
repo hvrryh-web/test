@@ -60,5 +60,15 @@ EOF
 
 systemctl daemon-reload || true
 
+# Add agent user to docker group so it can run docker commands without sudo
+if command -v docker >/dev/null 2>&1; then
+  groupadd -f docker || true
+  usermod -aG docker "$AGENT_USER"
+  # Optionally run docker-compose to start local services
+  if [ -f "/home/vagrant/workspace/docker-compose.yml" ]; then
+    sudo -u "$AGENT_USER" bash -lc "cd /home/vagrant/workspace && docker compose up -d --build"
+  fi
+fi
+
 # Final message
 echo "Provisioning complete. Connect via 'vagrant ssh' or configure SSH to the agent user on the VM." 

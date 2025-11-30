@@ -21,6 +21,8 @@ def test_export_boto3_local(tmp_path):
     df = pd.DataFrame({'id': [1, 2], 'value': [10, 20]})
     path = export_dataframe_to_s3(df, 'test_export_fallback')
     assert path is not None
+    # If it returns s3://, the call used boto3; else local path returned
+    assert path.startswith('s3://') or os.path.exists(path)
 
 
 if __name__ == '__main__':

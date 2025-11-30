@@ -14,13 +14,10 @@ Steps:
    - cd /home/vagrant/workspace/resources
    - python3 generate_sample_xlsx.py
 5. Run the agent harness manually or via the system service:
-<<<<<<< Updated upstream
-   - python /home/vagrant/workspace/agent/agent_runner.py --process-tasks
-=======
    - python -m agent.agent_runner --process-tasks
    - systemctl start agent-harness  # if service is enabled
->>>>>>> Stashed changes
-   - systemctl start agent-harness  # if service is enabled
+   - Or use Docker Compose to run the agent inside containers:
+     - docker compose up -d --build
 
 Notes:
 - The VM has an 'agent' user with passwordless sudo for ease of use for the agent harness. This is for demonstration only; for production, use stricter access controls.
