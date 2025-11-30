@@ -23,11 +23,23 @@ def test_generate_and_process(tmp_path):
     # Run the agent harness as module to ensure package imports work
     agent_script = ['-m', 'agent.agent_runner']
     cfg_path = os.path.join(PROJECT_DIR, "agent", "agent_config.json")
-    subprocess.run([sys.executable] + agent_script + ["--process-tasks"], check=True)
+    # Create a temp config that points to local test resources
+    import json
+    cfg = json.load(open(cfg_path, 'r', encoding='utf-8'))
+    cfg['data_dir'] = RESOURCES_DIR
+    cfg['log_file'] = os.path.join(PROJECT_DIR, 'agent', 'agent.log')
+    tmp_cfg = tmp_path / 'agent_config.json'
+    with open(tmp_cfg, 'w', encoding='utf-8') as f:
+        json.dump(cfg, f)
+    env = os.environ.copy()
+    env['AGENT_CONFIG_PATH'] = str(tmp_cfg)
+    subprocess.run([sys.executable] + agent_script + ["--process-tasks"], check=True, env=env)
 
     # Verify we created *.updated file
-    tasks_path = os.path.join(RESOURCES_DIR, "sample_tasks.xlsx.updated")
-    assert os.path.exists(tasks_path), "Updated tasks file not found"
+    tasks_path_a = os.path.join(RESOURCES_DIR, "sample_tasks.xlsx.updated")
+    tasks_path_b = os.path.join(RESOURCES_DIR, "sample_tasks.updated.xlsx")
+    assert os.path.exists(tasks_path_a) or os.path.exists(tasks_path_b), "Updated tasks file not found"
+    tasks_path = tasks_path_a if os.path.exists(tasks_path_a) else tasks_path_b
 
     df = pd.read_excel(tasks_path)
     assert not df.empty

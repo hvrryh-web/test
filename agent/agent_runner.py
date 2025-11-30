@@ -78,13 +78,12 @@ def process_task(task: Task) -> str:
 
     Returns updated status.
     """
-    # Safe sample action: mark the task as completed if description contains 'sample'
+    # Evaluate more specific actions before the general 'sample' matcher
     desc = task.description.lower() if task.description else ""
-    if "sample" in desc:
-        return "completed"
     # If the task indicates summarize, run a sample summarize
     if "summarize" in desc:
         try:
+            logging.info('Starting summarize action for %s', task.task_id)
             # Look up the sample data path relative to the config; the runner manages the file paths
             # This is a safe demonstration; in a real agent, validate the paths carefully
             data_path = os.path.join(os.path.dirname(__file__), "..", "resources", "sample_data.xlsx")
@@ -92,8 +91,10 @@ def process_task(task: Task) -> str:
             results = agent_tasks.summarize_data(data_path)
             out_path = os.path.join(os.path.dirname(__file__), "..", "resources", "summary.xlsx")
             agent_tasks.write_summary(out_path, results)
+            logging.info('Wrote summary to %s', out_path)
             return "completed"
-        except Exception:
+        except Exception as e:
+            logging.exception('Summarize failed for %s: %s', task.task_id, e)
             return "failed"
     # Extended actions: db_query, export, s3_export, email, run_command
     try:
@@ -130,6 +131,10 @@ def process_task(task: Task) -> str:
         logging.exception('Failed to process task %s: %s', task.task_id, e)
         return 'failed'
 
+    # Safe sample action: mark the task as completed if description contains 'sample'
+    if "sample" in desc:
+        return "completed"
+
     return 'in-progress'
 
 
@@ -143,7 +148,11 @@ def write_tasks(file_path: str, tasks: List[Task]):
         } for t in tasks]
     )
     # Save to a new file to avoid accidental overwrite
-    backup_path = file_path + ".updated"
+    # Use a valid extension for excel so pandas can determine engine
+    if file_path.lower().endswith('.xlsx'):
+        backup_path = file_path.replace('.xlsx', '.updated.xlsx')
+    else:
+        backup_path = file_path + '.updated.xlsx'
     df.to_excel(backup_path, index=False)
     logging.info("Wrote updated tasks to %s", backup_path)
 

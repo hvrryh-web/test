@@ -26,7 +26,13 @@ def configure_logging(log_file: str = None, level: str = 'INFO'):
                 os.makedirs(log_dir, exist_ok=True)
             except Exception:
                 pass
-        fh = logging.FileHandler(log_file)
+        try:
+            fh = logging.FileHandler(log_file)
+        except Exception:
+            # Fallback to workspace-local log path
+            local_log = os.path.join(os.getcwd(), 'agent', 'agent.log')
+            os.makedirs(os.path.dirname(local_log), exist_ok=True)
+            fh = logging.FileHandler(local_log)
         fh.setFormatter(formatter)
         logger.addHandler(fh)
 
