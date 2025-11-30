@@ -30,6 +30,18 @@ python resources/generate_sample_xlsx.py
 # If you run locally, override the config to point to the workspace resources:
 export AGENT_CONFIG_PATH=$(pwd)/agent/agent_config.json
 python -m agent.agent_runner --process-tasks
+
+4. Use the ChatGPT adapter to post tasks to MCP (optional):
+
+```bash
+# Dry run (no OpenAI):
+python tools/chatgpt_adapter.py --dry-run --count 1
+
+# Full run (requires OPENAI_API_KEY and AGENT_API_TOKEN):
+export OPENAI_API_KEY=sk-...
+export AGENT_API_TOKEN=changeme
+python tools/chatgpt_adapter.py --count 1 --host http://localhost --port 8080
+```
 ```
 3. Run tests:
 
