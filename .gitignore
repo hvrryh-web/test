@@ -1,18 +1,19 @@
-# Ignore Python artifacts
-__pycache__/
-*.py[cod]
+.prism.log
+_dev
 
-# Virtual environment
-.venv/
+__pycache__
+.mypy_cache
 
-# Agent logs and generated excel updates
-*/agent/agent.log
-*/resources/*.updated
-resources/credentials.xlsx
-exports/
+dist
 
-# Vagrant & VM states
-.vagrant/
+.venv
+.idea
 
-# Local overrides
-local.tmp
+.env
+.envrc
+codegen.log
+Brewfile.lock.json
+
+.DS_Store
+
+examples/*.mp3
