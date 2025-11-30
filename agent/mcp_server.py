@@ -69,7 +69,7 @@ def add_task():
         import pandas as pd
         if tasks_path.exists():
             df = pd.read_excel(tasks_path)
-            df = df.append(data, ignore_index=True)
+            df = pd.concat([df, pd.DataFrame([data])], ignore_index=True)
         else:
             df = pd.DataFrame([data])
         df.to_excel(tasks_path, index=False)
