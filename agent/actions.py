@@ -82,12 +82,8 @@ def export_dataframe_to_s3_stub(df: pd.DataFrame, export_name: str) -> str:
 
 def send_email_stub(to: str, subject: str, body: str) -> bool:
     # Do not send real emails from sample code. Instead, write to export file for auditing.
-<<<<<<< Updated upstream
-    path = os.path.join(EXPORTS_DIR, f'email_{to}_{int(time.time())}.json')
-=======
     safe_to = to.replace('@', '_').replace('/', '_') if to else 'unknown'
     path = os.path.join(EXPORTS_DIR, f'email_{safe_to}_{int(time.time())}.json')
->>>>>>> Stashed changes
     with open(path, 'w', encoding='utf-8') as f:
         json.dump({'to': to, 'subject': subject, 'body': body}, f, indent=2)
     logger.info('Email stub wrote message to %s', path)

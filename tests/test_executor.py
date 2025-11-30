@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 import os
 import sys
+# Ensure the project root is on sys.path for module imports during pytest
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import subprocess
 import json
 

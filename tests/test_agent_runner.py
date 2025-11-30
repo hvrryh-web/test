@@ -7,6 +7,8 @@ import subprocess
 import sys
 
 import pandas as pd
+# Ensure the project root is on sys.path for imports
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 THIS_DIR = os.path.dirname(__file__)
 PROJECT_DIR = os.path.abspath(os.path.join(THIS_DIR, ".."))

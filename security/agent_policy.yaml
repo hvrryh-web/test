@@ -13,6 +13,8 @@ allowed_actions:
     commands:
       - 'python agent/agent_runner.py'
       - 'python resources/generate_sample_xlsx.py'
+      - 'generate_sample_xlsx.py'
+      - '-m agent.agent_runner'
       - 'sqlite3'
       - 'python agent/actions.py'
       - 'aws'

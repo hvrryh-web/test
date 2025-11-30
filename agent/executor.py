@@ -34,8 +34,16 @@ class Policy:
         for a in allowed:
             if a.get('type') == 'run_command':
                 for c in a.get('commands', []):
-                    if cmd.strip() == c.strip() or c.strip() in cmd:
+                    candidate = c.strip()
+                    if cmd.strip() == candidate or candidate in cmd:
                         return True
+                    # Allow matching by basename, e.g., /full/path/generate_sample_xlsx.py
+                    try:
+                        base = os.path.basename(candidate)
+                        if base in cmd or cmd.strip().endswith(base):
+                            return True
+                    except Exception:
+                        pass
         return False
 
     def is_script_whitelisted(self, script_path: str) -> bool:

@@ -19,6 +19,13 @@ def configure_logging(log_file: str = None, level: str = 'INFO'):
     logger.addHandler(ch)
 
     if log_file:
+        # Ensure the directory exists for the log file
+        log_dir = os.path.dirname(log_file)
+        if log_dir and not os.path.exists(log_dir):
+            try:
+                os.makedirs(log_dir, exist_ok=True)
+            except Exception:
+                pass
         fh = logging.FileHandler(log_file)
         fh.setFormatter(formatter)
         logger.addHandler(fh)

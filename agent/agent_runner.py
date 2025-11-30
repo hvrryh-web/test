@@ -30,11 +30,7 @@ from . import tasks as agent_tasks
 from . import actions as agent_actions
 from . import executor as agent_executor
 from . import logging_config
-<<<<<<< Updated upstream
-from .metrics_server import start_metrics
-=======
 from .metrics_server import start_metrics, TASK_COUNTER, TASK_ERRORS
->>>>>>> Stashed changes
 from .vault_client import VaultClient
 
 CONFIG_PATH = os.getenv("AGENT_CONFIG_PATH") or os.path.join(os.path.dirname(__file__), "agent_config.json")
@@ -159,15 +155,12 @@ def process_tasks_file(config):
 
     for t in tasks:
         new_status = process_task(t)
-<<<<<<< Updated upstream
-=======
         try:
             TASK_COUNTER.inc()
             if new_status == 'failed':
                 TASK_ERRORS.inc()
         except Exception:
             pass
->>>>>>> Stashed changes
         logging.info("Task %s: %s -> %s", t.task_id, t.status, new_status)
         t.status = new_status
 
