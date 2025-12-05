@@ -1,0 +1,56 @@
+{
+  "last_node_id": 6,
+  "last_link_id": 5,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "LoadImage",
+      "pos": [-640, -140],
+      "size": [210, 100],
+      "widgets_values": ["subject.png", "image"]
+    },
+    {
+      "id": 2,
+      "type": "LoadImage",
+      "pos": [-640, 80],
+      "size": [210, 100],
+      "widgets_values": ["edges.png", "image"]
+    },
+    {
+      "id": 3,
+      "type": "AppControlNet",
+      "pos": [-250, -40],
+      "size": [420, 420],
+      "inputs": {"image": [1, 0], "control_image": [2, 0]},
+      "widgets_values": {
+        "prompt": "Portrait photo lit with neon",
+        "negative_prompt": "overexposed",
+        "seed": 445566,
+        "preset": "controlnet",
+        "control_mode": "canny",
+        "strength": 0.85,
+        "scheduler": "ddim"
+      }
+    },
+    {
+      "id": 4,
+      "type": "PreviewImage",
+      "pos": [360, -60],
+      "size": [210, 100],
+      "inputs": {"images": [3, 0]}
+    },
+    {
+      "id": 5,
+      "type": "SaveImage",
+      "pos": [360, 120],
+      "size": [210, 100],
+      "inputs": {"images": [3, 0]}
+    }
+  ],
+  "links": [
+    [1, 0, 3, 0, "image", 0],
+    [2, 0, 3, 1, "control_image", 0],
+    [3, 0, 4, 0, "images", 0],
+    [3, 0, 5, 0, "images", 0]
+  ]
+}

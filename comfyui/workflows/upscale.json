@@ -1,0 +1,45 @@
+{
+  "last_node_id": 5,
+  "last_link_id": 4,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "LoadImage",
+      "pos": [-420, -80],
+      "size": [210, 100],
+      "widgets_values": ["lowres.png", "image"]
+    },
+    {
+      "id": 2,
+      "type": "AppUpscale",
+      "pos": [-80, -60],
+      "size": [380, 260],
+      "inputs": {"image": [1, 0]},
+      "widgets_values": {
+        "seed": 12345,
+        "preset": "refiner",
+        "scale": 2.0,
+        "scheduler": "euler_a"
+      }
+    },
+    {
+      "id": 3,
+      "type": "PreviewImage",
+      "pos": [320, -40],
+      "size": [210, 100],
+      "inputs": {"images": [2, 0]}
+    },
+    {
+      "id": 4,
+      "type": "SaveImage",
+      "pos": [320, 120],
+      "size": [210, 100],
+      "inputs": {"images": [2, 0]}
+    }
+  ],
+  "links": [
+    [1, 0, 2, 0, "image", 0],
+    [2, 0, 3, 0, "images", 0],
+    [2, 0, 4, 0, "images", 0]
+  ]
+}

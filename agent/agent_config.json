@@ -9,6 +9,16 @@
     "token_env_var": "VAULT_TOKEN",
     "secrets_path": "secret/data/myapp"
   },
-  "mode": "service"
-  ,"api_host":"0.0.0.0", "api_port": 8080, "api_token":"changeme"
+  "mode": "service",
+  "api_host": "0.0.0.0",
+  "api_port": 8080,
+  "api_token": "changeme",
+  "models": {
+    "txt2img": "/models/stable-diffusion-xl",
+    "img2img": "/models/stable-diffusion-xl",
+    "controlnet": "/models/controlnet-canny",
+    "upscale": "/models/esrgan"
+  },
+  "precision": "fp16",
+  "scheduler": "ddim"
 }
