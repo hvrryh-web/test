@@ -13,6 +13,10 @@ It is generated from our [OpenAPI specification](https://github.com/openai/opena
 
 The REST API documentation can be found on [platform.openai.com](https://platform.openai.com/docs/api-reference). The full API of this library can be found in [api.md](api.md).
 
+## ComfyUI workspace
+
+This repository also contains a separate [ComfyUI workspace](comfyui/README.md) for running ComfyUI with Docker or Docker Compose. The ComfyUI assets live alongside, but are isolated from, the OpenAI Python client library so they can be developed and deployed independently.
+
 ## Installation
 
 ```sh
