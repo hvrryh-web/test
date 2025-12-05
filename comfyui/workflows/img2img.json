@@ -1,0 +1,47 @@
+{
+  "last_node_id": 5,
+  "last_link_id": 4,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "LoadImage",
+      "pos": [-500, -120],
+      "size": [210, 100],
+      "widgets_values": ["starter.png", "image"]
+    },
+    {
+      "id": 2,
+      "type": "AppImg2Img",
+      "pos": [-180, -80],
+      "size": [380, 360],
+      "inputs": {"image": [1, 0]},
+      "widgets_values": {
+        "prompt": "Upgrade this sketch to a cinematic frame",
+        "negative_prompt": "grain",
+        "seed": 9988,
+        "preset": "image-to-image",
+        "denoise": 0.45,
+        "scheduler": "ddim"
+      }
+    },
+    {
+      "id": 3,
+      "type": "PreviewImage",
+      "pos": [330, -80],
+      "size": [210, 100],
+      "inputs": {"images": [2, 0]}
+    },
+    {
+      "id": 4,
+      "type": "SaveImage",
+      "pos": [330, 120],
+      "size": [210, 100],
+      "inputs": {"images": [2, 0]}
+    }
+  ],
+  "links": [
+    [1, 0, 2, 0, "image", 0],
+    [2, 0, 3, 0, "images", 0],
+    [2, 0, 4, 0, "images", 0]
+  ]
+}

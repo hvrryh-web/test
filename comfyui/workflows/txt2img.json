@@ -1,0 +1,41 @@
+{
+  "last_node_id": 3,
+  "last_link_id": 2,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "AppTxt2Img",
+      "pos": [-250, -50],
+      "size": [380, 420],
+      "widgets_values": {
+        "prompt": "A misty lighthouse at dawn",
+        "negative_prompt": "lowres, blurry",
+        "seed": 123456,
+        "preset": "standard",
+        "steps": 28,
+        "cfg_scale": 7.5,
+        "width": 768,
+        "height": 768,
+        "scheduler": "euler_a"
+      }
+    },
+    {
+      "id": 2,
+      "type": "SaveImage",
+      "pos": [300, -120],
+      "size": [210, 100],
+      "inputs": {"images": [1, 0]}
+    },
+    {
+      "id": 3,
+      "type": "PreviewImage",
+      "pos": [300, 60],
+      "size": [210, 100],
+      "inputs": {"images": [1, 0]}
+    }
+  ],
+  "links": [
+    [1, 0, 2, 0, "images", 0],
+    [1, 0, 3, 0, "images", 0]
+  ]
+}
