@@ -1,0 +1,45 @@
+name: ComfyUI Z-Image Container
+
+on:
+  push:
+    branches: [main]
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push ComfyUI + Z-Image image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: docker/ComfyUI.ZImage.Dockerfile
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/comfyui-z-image:latest
+            ghcr.io/${{ github.repository_owner }}/comfyui-z-image:${{ github.ref_name }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Confirm cached models mount
+        if: success()
+        run: |
+          echo "Model cache mounted at build time for /root/.cache/comfyui/models"
