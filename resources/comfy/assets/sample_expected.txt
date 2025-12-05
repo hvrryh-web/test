@@ -1,0 +1,1 @@
+This is a placeholder expected output for the smoke render.

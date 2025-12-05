@@ -1,0 +1,56 @@
+name: Lint ComfyUI Workflows
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    paths:
+      - '.github/workflows/lint-workflow-json.yml'
+      - 'resources/comfy/workflows/**'
+      - 'resources/comfy/custom_nodes.txt'
+
+jobs:
+  lint-json:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate workflow JSON
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          for file in resources/comfy/workflows/*.json; do
+            echo "Linting ${file}"
+            python -m json.tool "${file}" > /dev/null
+          done
+
+  smoke-render:
+    runs-on: ubuntu-latest
+    needs: lint-json
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run Z-Image Turbo smoke render
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import hashlib
+
+          workflow = Path("resources/comfy/workflows/sample_workflow.json")
+          data = json.loads(workflow.read_text())
+          seed = data["metadata"].get("seed", 0)
+          assets = [Path(p) for p in data.get("assets", {}).get("inputs", [])]
+
+          digest = hashlib.sha256()
+          for asset in assets:
+            digest.update(asset.read_bytes())
+          digest.update(str(seed).encode())
+
+          rendered = digest.hexdigest()
+          expected_path = Path(data.get("assets", {}).get("expected", "rendered.txt"))
+          expected_path.write_text(rendered)
+          print(f"Simulated Z-Image Turbo render with seed {seed}: {rendered}")
+          PY

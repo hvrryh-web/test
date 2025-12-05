@@ -1,0 +1,28 @@
+{
+  "name": "sample z-image turbo workflow",
+  "metadata": {
+    "description": "Smoke test workflow for Z-Image Turbo",
+    "seed": 42,
+    "checkpoint": "turbo",
+    "positive_prompt": "a small smoke test render"
+  },
+  "nodes": [
+    {
+      "id": "input_image",
+      "type": "LoadImage",
+      "path": "resources/comfy/assets/sample_input.txt"
+    },
+    {
+      "id": "z_image_turbo",
+      "type": "ZImageTurbo",
+      "seed": 42,
+      "inputs": ["input_image"],
+      "outputs": ["rendered_image"]
+    }
+  ],
+  "custom_nodes": ["ZImageTurbo", "LoadImage"],
+  "assets": {
+    "inputs": ["resources/comfy/assets/sample_input.txt"],
+    "expected": "resources/comfy/assets/sample_expected.txt"
+  }
+}
