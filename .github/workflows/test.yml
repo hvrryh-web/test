@@ -33,6 +33,7 @@ jobs:
           RUN_INTEGRATION_TESTS: 'true'
           VAULT_ADDR: 'http://127.0.0.1:8200'
           VAULT_TOKEN: 'root'
+          COMFYUI_RUN_SMOKE_ON_CPU: '1'
         run: |
           pytest -q
       - name: Tear down Vault (dev) container
