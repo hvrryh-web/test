@@ -108,11 +108,11 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build]
 include = [
-  "src/*"
+  "openai/*"
 ]
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/openai"]
+packages = ["openai"]
 
 [tool.hatch.build.targets.sdist]
 # Basically everything except hidden files/directories (such as .github, .devcontainers, .python-version, etc)
@@ -125,7 +125,7 @@ include = [
   "/noxfile.py",
   "bin/*",
   "examples/*",
-  "src/*",
+  "openai/*",
   "tests/*",
 ]
 
@@ -192,10 +192,8 @@ show_error_codes = true
 # realtime examples use inline `uv` script dependencies
 # which means it can't be type checked
 exclude = [
-  'src/openai/_files.py',
   '_dev/.*.py',
   'tests/.*',
-  'src/openai/_utils/_logs.py',
   'examples/realtime/audio_util.py',
   'examples/realtime/push_to_talk_app.py',
 ]
