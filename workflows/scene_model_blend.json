@@ -1,0 +1,151 @@
+{
+  "last_node_id": 15,
+  "last_link_id": 15,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "CLIPTextEncode",
+      "pos": [-760, -120],
+      "size": [240, 130],
+      "widgets_values": ["sunset street scene, cinematic lighting"],
+      "label": "Scene Prompt"
+    },
+    {
+      "id": 2,
+      "type": "CLIPTextEncode",
+      "pos": [-760, 60],
+      "size": [240, 130],
+      "widgets_values": ["model: realisticVision, add soft bloom"],
+      "label": "Model Prompt"
+    },
+    {
+      "id": 3,
+      "type": "Z-Image",
+      "pos": [-540, -40],
+      "size": [140, 80],
+      "widgets_values": [960, 540, 987, "scene_blend_seed"],
+      "label": "Z-Image Seed"
+    },
+    {
+      "id": 4,
+      "type": "ControlNetApply",
+      "pos": [-360, -160],
+      "size": [180, 120],
+      "widgets_values": ["depth_midas", 0.55],
+      "label": "Depth ControlNet"
+    },
+    {
+      "id": 5,
+      "type": "LoadImage",
+      "pos": [-540, -220],
+      "size": [160, 100],
+      "widgets_values": ["inputs/depth_map.png", false],
+      "label": "Depth Input"
+    },
+    {
+      "id": 6,
+      "type": "Number",
+      "pos": [-140, -200],
+      "size": [120, 60],
+      "widgets_values": [0.6],
+      "label": "JP Layer: base scene"
+    },
+    {
+      "id": 7,
+      "type": "Number",
+      "pos": [-140, -120],
+      "size": [120, 60],
+      "widgets_values": [0.4],
+      "label": "JP Layer: model style"
+    },
+    {
+      "id": 8,
+      "type": "KSampler",
+      "pos": [-120, 0],
+      "size": [200, 220],
+      "widgets_values": [30, 10, "ddim", 24, 0.55, "scene"],
+      "label": "Blend Sampler"
+    },
+    {
+      "id": 9,
+      "type": "ESRGANUpscale",
+      "pos": [160, 0],
+      "size": [200, 140],
+      "widgets_values": [1.8, "4x-UltraSharp"],
+      "label": "Upscale"
+    },
+    {
+      "id": 10,
+      "type": "SaveImage",
+      "pos": [420, 0],
+      "size": [150, 100],
+      "widgets_values": ["outputs/scene_model_blend.png"],
+      "label": "Save Image"
+    },
+    {
+      "id": 11,
+      "type": "SaveMetadata",
+      "pos": [420, 160],
+      "size": [200, 120],
+      "widgets_values": ["outputs/scene_model_blend.json"],
+      "label": "Export Metadata"
+    },
+    {
+      "id": 12,
+      "type": "MaskFromText",
+      "pos": [-360, 140],
+      "size": [200, 110],
+      "widgets_values": [0.25],
+      "label": "Glow Mask"
+    },
+    {
+      "id": 13,
+      "type": "MaskToImage",
+      "pos": [420, 320],
+      "size": [180, 100],
+      "label": "Mask Preview"
+    },
+    {
+      "id": 14,
+      "type": "SaveMask",
+      "pos": [420, 240],
+      "size": [150, 90],
+      "widgets_values": ["outputs/scene_model_blend_mask.png"],
+      "label": "Save Mask"
+    },
+    {
+      "id": 15,
+      "type": "ImageComposite",
+      "pos": [640, 40],
+      "size": [200, 110],
+      "widgets_values": ["screen"],
+      "label": "Scene/Glow Composite"
+    }
+  ],
+  "links": [
+    [1, 1, 0, 8, 5, "CONDITIONING"],
+    [2, 2, 0, 8, 6, "CONDITIONING"],
+    [3, 3, 0, 8, 0, "LATENT"],
+    [4, 5, 0, 4, 0, "IMAGE"],
+    [5, 4, 0, 8, 3, "CONTROL_NET"],
+    [6, 6, 0, 8, 7, "WEIGHT"],
+    [7, 7, 0, 8, 8, "WEIGHT"],
+    [8, 8, 0, 9, 0, "IMAGE"],
+    [9, 9, 0, 10, 0, "IMAGE"],
+    [10, 12, 0, 14, 0, "MASK"],
+    [11, 14, 0, 13, 0, "MASK"],
+    [12, 9, 0, 15, 0, "IMAGE"],
+    [13, 12, 0, 15, 1, "MASK"],
+    [14, 9, 0, 11, 0, "IMAGE"],
+    [15, 2, 0, 12, 0, "TEXT"]
+  ],
+  "groups": [],
+  "extra": {
+    "name": "Scene + Model Blend",
+    "notes": "Blend scene and model prompts with JP layer sliders for base scene/model style. Depth ControlNet locks composition; ESRGAN sharpens.",
+    "sample_inputs": {
+      "depth_map": "resources/samples/depth_map.png"
+    },
+    "sample_prompt": "blend cinematic neon street with soft bloom realisticVision style"
+  }
+}

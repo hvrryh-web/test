@@ -1,0 +1,154 @@
+{
+  "last_node_id": 15,
+  "last_link_id": 16,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "LoadImage",
+      "pos": [-760, -200],
+      "size": [140, 90],
+      "widgets_values": ["inputs/source_face.png", false],
+      "label": "Source Face"
+    },
+    {
+      "id": 2,
+      "type": "LoadImage",
+      "pos": [-760, 60],
+      "size": [140, 90],
+      "widgets_values": ["inputs/target_frame.png", false],
+      "label": "Target Frame"
+    },
+    {
+      "id": 3,
+      "type": "Z-Image",
+      "pos": [-560, -70],
+      "size": [140, 80],
+      "widgets_values": [512, 512, 0, "face_transpose_seed"],
+      "label": "Z-Image Seed"
+    },
+    {
+      "id": 4,
+      "type": "ControlNetApply",
+      "pos": [-360, -160],
+      "size": [170, 120],
+      "widgets_values": ["face_alignment", 0.8],
+      "label": "Face ControlNet"
+    },
+    {
+      "id": 5,
+      "type": "CLIPTextEncode",
+      "pos": [-360, 40],
+      "size": [230, 130],
+      "widgets_values": ["(face swap), sharp eyes, same lighting"],
+      "label": "Prompt"
+    },
+    {
+      "id": 6,
+      "type": "Number",
+      "pos": [-140, -220],
+      "size": [120, 60],
+      "widgets_values": [0.65],
+      "label": "JP Layer: face detail"
+    },
+    {
+      "id": 7,
+      "type": "Number",
+      "pos": [-140, -130],
+      "size": [120, 60],
+      "widgets_values": [0.35],
+      "label": "JP Layer: skin tone"
+    },
+    {
+      "id": 8,
+      "type": "KSampler",
+      "pos": [-120, -20],
+      "size": [200, 220],
+      "widgets_values": [20, 8, "euler", 30, 0.7, "face"],
+      "label": "Face Swap Sampler"
+    },
+    {
+      "id": 9,
+      "type": "ESRGANUpscale",
+      "pos": [160, -20],
+      "size": [200, 140],
+      "widgets_values": [2.0, "R-ESRGAN 4x+"],
+      "label": "Upscale"
+    },
+    {
+      "id": 10,
+      "type": "MaskFromRoi",
+      "pos": [160, 160],
+      "size": [200, 100],
+      "widgets_values": [[210, 180, 180, 180]],
+      "label": "Export Mask"
+    },
+    {
+      "id": 11,
+      "type": "SaveImage",
+      "pos": [420, -20],
+      "size": [150, 100],
+      "widgets_values": ["outputs/face_transpose.png"],
+      "label": "Save Image"
+    },
+    {
+      "id": 12,
+      "type": "SaveMask",
+      "pos": [420, 160],
+      "size": [150, 100],
+      "widgets_values": ["outputs/face_transpose_mask.png"],
+      "label": "Save Mask"
+    },
+    {
+      "id": 13,
+      "type": "SaveMetadata",
+      "pos": [640, 60],
+      "size": [200, 120],
+      "widgets_values": ["outputs/face_transpose.json"],
+      "label": "Export Metadata"
+    },
+    {
+      "id": 14,
+      "type": "ImageComposite",
+      "pos": [640, -120],
+      "size": [200, 110],
+      "widgets_values": ["copy"],
+      "label": "Composite"
+    },
+    {
+      "id": 15,
+      "type": "MaskToImage",
+      "pos": [640, 200],
+      "size": [160, 100],
+      "widgets_values": [],
+      "label": "Mask Preview"
+    }
+  ],
+  "links": [
+    [1, 1, 0, 4, 0, "IMAGE"],
+    [2, 2, 0, 4, 1, "IMAGE"],
+    [3, 3, 0, 8, 0, "LATENT"],
+    [4, 4, 0, 8, 3, "CONTROL_NET"],
+    [5, 5, 0, 8, 5, "CONDITIONING"],
+    [6, 6, 0, 8, 6, "WEIGHT"],
+    [7, 7, 0, 8, 7, "WEIGHT"],
+    [8, 8, 0, 9, 0, "IMAGE"],
+    [9, 9, 0, 11, 0, "IMAGE"],
+    [10, 2, 0, 10, 0, "IMAGE"],
+    [11, 10, 0, 12, 0, "MASK"],
+    [12, 9, 0, 14, 0, "IMAGE"],
+    [13, 12, 0, 15, 0, "MASK"],
+    [14, 9, 0, 13, 0, "IMAGE"],
+    [15, 5, 0, 13, 1, "TEXT"],
+    [16, 6, 0, 13, 2, "NUMBER"]
+  ],
+  "groups": [],
+  "extra": {
+    "name": "Face Transpose",
+    "notes": "Swap source face onto target using ControlNet alignment and JP layer sliders for face detail/skin.",
+    "sample_inputs": {
+      "source_face": "resources/samples/face_source.png",
+      "target_frame": "resources/samples/face_target.png"
+    },
+    "sample_prompt": "transpose face onto target with neutral expression and matched lighting"
+  }
+}

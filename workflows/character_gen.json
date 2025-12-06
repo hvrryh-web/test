@@ -1,0 +1,159 @@
+{
+  "last_node_id": 16,
+  "last_link_id": 16,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "CLIPTextEncode",
+      "pos": [-780, -140],
+      "size": [260, 140],
+      "widgets_values": ["heroic explorer, layered outfit, confident pose"],
+      "label": "Character Prompt"
+    },
+    {
+      "id": 2,
+      "type": "Z-Image",
+      "pos": [-540, -60],
+      "size": [140, 80],
+      "widgets_values": [768, 1152, 2121, "character_seed"],
+      "label": "Z-Image Seed"
+    },
+    {
+      "id": 3,
+      "type": "ControlNetApply",
+      "pos": [-360, -200],
+      "size": [180, 120],
+      "widgets_values": ["openpose", 0.65],
+      "label": "Pose ControlNet"
+    },
+    {
+      "id": 4,
+      "type": "LoadImage",
+      "pos": [-540, -220],
+      "size": [160, 100],
+      "widgets_values": ["inputs/pose.png", false],
+      "label": "Pose Ref"
+    },
+    {
+      "id": 5,
+      "type": "Number",
+      "pos": [-140, -220],
+      "size": [120, 60],
+      "widgets_values": [0.55],
+      "label": "JP Layer: silhouette"
+    },
+    {
+      "id": 6,
+      "type": "Number",
+      "pos": [-140, -140],
+      "size": [120, 60],
+      "widgets_values": [0.25],
+      "label": "JP Layer: costume"
+    },
+    {
+      "id": 7,
+      "type": "Number",
+      "pos": [-140, -60],
+      "size": [120, 60],
+      "widgets_values": [0.2],
+      "label": "JP Layer: accessories"
+    },
+    {
+      "id": 8,
+      "type": "KSampler",
+      "pos": [-120, 40],
+      "size": [200, 220],
+      "widgets_values": [26, 12, "dpmpp_sde", 18, 0.6, "character"],
+      "label": "Character Sampler"
+    },
+    {
+      "id": 9,
+      "type": "ESRGANUpscale",
+      "pos": [160, 40],
+      "size": [200, 140],
+      "widgets_values": [1.7, "4x_NMKD-Superscale"],
+      "label": "Upscale"
+    },
+    {
+      "id": 10,
+      "type": "SaveImage",
+      "pos": [420, 20],
+      "size": [150, 100],
+      "widgets_values": ["outputs/character_gen.png"],
+      "label": "Save Image"
+    },
+    {
+      "id": 11,
+      "type": "SaveMetadata",
+      "pos": [420, 180],
+      "size": [200, 120],
+      "widgets_values": ["outputs/character_gen.json"],
+      "label": "Export Metadata"
+    },
+    {
+      "id": 12,
+      "type": "MaskFromText",
+      "pos": [-360, 160],
+      "size": [200, 110],
+      "widgets_values": [0.45],
+      "label": "Accessory Mask"
+    },
+    {
+      "id": 13,
+      "type": "SaveMask",
+      "pos": [420, 300],
+      "size": [150, 90],
+      "widgets_values": ["outputs/character_gen_mask.png"],
+      "label": "Save Mask"
+    },
+    {
+      "id": 14,
+      "type": "MaskToImage",
+      "pos": [420, 380],
+      "size": [180, 100],
+      "label": "Mask Preview"
+    },
+    {
+      "id": 15,
+      "type": "ImageComposite",
+      "pos": [640, 80],
+      "size": [200, 110],
+      "widgets_values": ["multiply"],
+      "label": "Accessory Composite"
+    },
+    {
+      "id": 16,
+      "type": "CLIPTextEncode",
+      "pos": [-780, 40],
+      "size": [260, 130],
+      "widgets_values": ["ornate accessories mask"],
+      "label": "Accessory Prompt"
+    }
+  ],
+  "links": [
+    [1, 1, 0, 8, 5, "CONDITIONING"],
+    [2, 2, 0, 8, 0, "LATENT"],
+    [3, 4, 0, 3, 0, "IMAGE"],
+    [4, 3, 0, 8, 3, "CONTROL_NET"],
+    [5, 5, 0, 8, 7, "WEIGHT"],
+    [6, 6, 0, 8, 8, "WEIGHT"],
+    [7, 7, 0, 8, 9, "WEIGHT"],
+    [8, 8, 0, 9, 0, "IMAGE"],
+    [9, 9, 0, 10, 0, "IMAGE"],
+    [10, 12, 0, 13, 0, "MASK"],
+    [11, 13, 0, 14, 0, "MASK"],
+    [12, 9, 0, 15, 0, "IMAGE"],
+    [13, 12, 0, 15, 1, "MASK"],
+    [14, 9, 0, 11, 0, "IMAGE"],
+    [15, 16, 0, 12, 0, "TEXT"]
+  ],
+  "groups": [],
+  "extra": {
+    "name": "Character Generation",
+    "notes": "Pose-guided character generator with JP sliders for silhouette, costume, accessories. ESRGAN upscale keeps outfit layers crisp.",
+    "sample_inputs": {
+      "pose_ref": "resources/samples/pose.png"
+    },
+    "sample_prompt": "rugged explorer with layered gear, leather harness, confident stance"
+  }
+}
