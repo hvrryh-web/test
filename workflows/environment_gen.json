@@ -1,0 +1,142 @@
+{
+  "last_node_id": 14,
+  "last_link_id": 14,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "CLIPTextEncode",
+      "pos": [-760, -120],
+      "size": [240, 130],
+      "widgets_values": ["lush forest temple, volumetric fog, morning light"],
+      "label": "Environment Prompt"
+    },
+    {
+      "id": 2,
+      "type": "Z-Image",
+      "pos": [-540, -60],
+      "size": [140, 80],
+      "widgets_values": [1024, 576, 77, "env_seed"],
+      "label": "Z-Image Seed"
+    },
+    {
+      "id": 3,
+      "type": "ControlNetApply",
+      "pos": [-360, -160],
+      "size": [180, 120],
+      "widgets_values": ["normal_bae", 0.6],
+      "label": "Normal ControlNet"
+    },
+    {
+      "id": 4,
+      "type": "LoadImage",
+      "pos": [-540, -220],
+      "size": [160, 100],
+      "widgets_values": ["inputs/normal_map.png", false],
+      "label": "Normal Map"
+    },
+    {
+      "id": 5,
+      "type": "Number",
+      "pos": [-140, -200],
+      "size": [120, 60],
+      "widgets_values": [0.7],
+      "label": "JP Layer: environment"
+    },
+    {
+      "id": 6,
+      "type": "Number",
+      "pos": [-140, -120],
+      "size": [120, 60],
+      "widgets_values": [0.3],
+      "label": "JP Layer: fog"
+    },
+    {
+      "id": 7,
+      "type": "KSampler",
+      "pos": [-120, -20],
+      "size": [200, 220],
+      "widgets_values": [28, 8, "euler_a", 32, 0.6, "environment"],
+      "label": "Environment Sampler"
+    },
+    {
+      "id": 8,
+      "type": "ESRGANUpscale",
+      "pos": [160, -20],
+      "size": [200, 140],
+      "widgets_values": [2.2, "4x-AnimeSharp"],
+      "label": "Upscale"
+    },
+    {
+      "id": 9,
+      "type": "SaveImage",
+      "pos": [420, -40],
+      "size": [150, 100],
+      "widgets_values": ["outputs/environment_gen.png"],
+      "label": "Save Image"
+    },
+    {
+      "id": 10,
+      "type": "SaveMetadata",
+      "pos": [420, 120],
+      "size": [200, 120],
+      "widgets_values": ["outputs/environment_gen.json"],
+      "label": "Export Metadata"
+    },
+    {
+      "id": 11,
+      "type": "MaskFromText",
+      "pos": [-360, 140],
+      "size": [200, 110],
+      "widgets_values": [0.4],
+      "label": "Fog Mask"
+    },
+    {
+      "id": 12,
+      "type": "SaveMask",
+      "pos": [420, 240],
+      "size": [150, 90],
+      "widgets_values": ["outputs/environment_gen_mask.png"],
+      "label": "Save Mask"
+    },
+    {
+      "id": 13,
+      "type": "MaskToImage",
+      "pos": [420, 320],
+      "size": [180, 100],
+      "label": "Mask Preview"
+    },
+    {
+      "id": 14,
+      "type": "ImageComposite",
+      "pos": [640, 40],
+      "size": [200, 110],
+      "widgets_values": ["lighten"],
+      "label": "Fog Composite"
+    }
+  ],
+  "links": [
+    [1, 1, 0, 7, 5, "CONDITIONING"],
+    [2, 2, 0, 7, 0, "LATENT"],
+    [3, 4, 0, 3, 0, "IMAGE"],
+    [4, 3, 0, 7, 3, "CONTROL_NET"],
+    [5, 5, 0, 7, 7, "WEIGHT"],
+    [6, 6, 0, 7, 8, "WEIGHT"],
+    [7, 7, 0, 8, 0, "IMAGE"],
+    [8, 8, 0, 9, 0, "IMAGE"],
+    [9, 11, 0, 12, 0, "MASK"],
+    [10, 12, 0, 13, 0, "MASK"],
+    [11, 9, 0, 14, 0, "IMAGE"],
+    [12, 11, 0, 14, 1, "MASK"],
+    [13, 9, 0, 10, 0, "IMAGE"],
+    [14, 6, 0, 11, 0, "TEXT"]
+  ],
+  "groups": [],
+  "extra": {
+    "name": "Environment Generation",
+    "notes": "Normal-map guided environment build with JP layer sliders for environment/fog balance. ESRGAN optional for crisp foliage.",
+    "sample_inputs": {
+      "normal_map": "resources/samples/normal_map.png"
+    },
+    "sample_prompt": "ancient temple hidden in misty cedar forest"
+  }
+}

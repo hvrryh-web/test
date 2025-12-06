@@ -1,0 +1,171 @@
+{
+  "last_node_id": 17,
+  "last_link_id": 17,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "LoadImage",
+      "pos": [-820, -200],
+      "size": [160, 100],
+      "widgets_values": ["inputs/character_gen.png", false],
+      "label": "Character Pass"
+    },
+    {
+      "id": 2,
+      "type": "LoadImage",
+      "pos": [-820, -40],
+      "size": [160, 100],
+      "widgets_values": ["inputs/environment_gen.png", false],
+      "label": "Environment Pass"
+    },
+    {
+      "id": 3,
+      "type": "LoadImage",
+      "pos": [-820, 120],
+      "size": [160, 100],
+      "widgets_values": ["inputs/face_transpose_mask.png", false],
+      "label": "Face Mask"
+    },
+    {
+      "id": 4,
+      "type": "ControlNetApply",
+      "pos": [-580, -200],
+      "size": [200, 120],
+      "widgets_values": ["segmentation", 0.5],
+      "label": "Matte ControlNet"
+    },
+    {
+      "id": 5,
+      "type": "Z-Image",
+      "pos": [-580, 40],
+      "size": [160, 90],
+      "widgets_values": [1280, 720, 404, "final_seed"],
+      "label": "Z-Image Seed"
+    },
+    {
+      "id": 6,
+      "type": "Number",
+      "pos": [-320, -240],
+      "size": [140, 60],
+      "widgets_values": [0.45],
+      "label": "JP Layer: character"
+    },
+    {
+      "id": 7,
+      "type": "Number",
+      "pos": [-320, -160],
+      "size": [140, 60],
+      "widgets_values": [0.35],
+      "label": "JP Layer: environment"
+    },
+    {
+      "id": 8,
+      "type": "Number",
+      "pos": [-320, -80],
+      "size": [140, 60],
+      "widgets_values": [0.2],
+      "label": "JP Layer: effects"
+    },
+    {
+      "id": 9,
+      "type": "ImageComposite",
+      "pos": [-320, 40],
+      "size": [200, 120],
+      "widgets_values": ["over"],
+      "label": "Base Composite"
+    },
+    {
+      "id": 10,
+      "type": "CLIPTextEncode",
+      "pos": [-580, 220],
+      "size": [240, 140],
+      "widgets_values": ["final polish, cinematic contrast, subtle bloom"],
+      "label": "Final Prompt"
+    },
+    {
+      "id": 11,
+      "type": "KSampler",
+      "pos": [-80, 0],
+      "size": [220, 240],
+      "widgets_values": [20, 10, "uni_pc", 18, 0.55, "final"],
+      "label": "Final Sampler"
+    },
+    {
+      "id": 12,
+      "type": "ESRGANUpscale",
+      "pos": [180, 0],
+      "size": [200, 140],
+      "widgets_values": [2.4, "4x-UltraSharp"],
+      "label": "Final Upscale"
+    },
+    {
+      "id": 13,
+      "type": "SaveImage",
+      "pos": [440, -40],
+      "size": [150, 100],
+      "widgets_values": ["outputs/final_render.png"],
+      "label": "Save Image"
+    },
+    {
+      "id": 14,
+      "type": "MaskFromRoi",
+      "pos": [-80, 260],
+      "size": [200, 100],
+      "widgets_values": [[200, 200, 240, 200]],
+      "label": "Export Mask"
+    },
+    {
+      "id": 15,
+      "type": "SaveMask",
+      "pos": [440, 120],
+      "size": [150, 90],
+      "widgets_values": ["outputs/final_render_mask.png"],
+      "label": "Save Mask"
+    },
+    {
+      "id": 16,
+      "type": "SaveMetadata",
+      "pos": [660, 20],
+      "size": [200, 120],
+      "widgets_values": ["outputs/final_render.json"],
+      "label": "Export Metadata"
+    },
+    {
+      "id": 17,
+      "type": "MaskToImage",
+      "pos": [660, 160],
+      "size": [180, 100],
+      "label": "Mask Preview"
+    }
+  ],
+  "links": [
+    [1, 1, 0, 9, 0, "IMAGE"],
+    [2, 2, 0, 9, 1, "IMAGE"],
+    [3, 3, 0, 4, 1, "MASK"],
+    [4, 1, 0, 4, 0, "IMAGE"],
+    [5, 4, 0, 11, 3, "CONTROL_NET"],
+    [6, 5, 0, 11, 0, "LATENT"],
+    [7, 6, 0, 11, 7, "WEIGHT"],
+    [8, 7, 0, 11, 8, "WEIGHT"],
+    [9, 8, 0, 11, 9, "WEIGHT"],
+    [10, 9, 0, 11, 1, "IMAGE"],
+    [11, 10, 0, 11, 5, "CONDITIONING"],
+    [12, 11, 0, 12, 0, "IMAGE"],
+    [13, 12, 0, 13, 0, "IMAGE"],
+    [14, 14, 0, 15, 0, "MASK"],
+    [15, 15, 0, 17, 0, "MASK"],
+    [16, 12, 0, 16, 0, "IMAGE"],
+    [17, 10, 0, 16, 1, "TEXT"]
+  ],
+  "groups": [],
+  "extra": {
+    "name": "Final Render",
+    "notes": "Combine character, environment, and face mask with JP sliders for final balance. ControlNet segmentation stabilizes matting; ESRGAN yields delivery-ready output.",
+    "sample_inputs": {
+      "character_pass": "outputs/character_gen.png",
+      "environment_pass": "outputs/environment_gen.png",
+      "face_mask": "outputs/face_transpose_mask.png"
+    },
+    "sample_prompt": "final cinematic key art with cohesive lighting"
+  }
+}
