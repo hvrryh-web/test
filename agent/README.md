@@ -12,11 +12,7 @@ How to run locally:
 ./scripts/bootstrap_local.sh
 source .venv/bin/activate
 python resources/generate_sample_xlsx.py
-<<<<<<< Updated upstream
-python agent/agent_runner.py --process-tasks
-=======
 python -m agent.agent_runner --process-tasks
->>>>>>> Stashed changes
 ```
 
 How to run in VM:

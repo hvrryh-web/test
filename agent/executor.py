@@ -30,21 +30,45 @@ class Policy:
         return {}
 
     def allows_command(self, cmd: str) -> bool:
-        # Basic check: exact match or substring in whitelisted commands
+        """Return True only when the command exactly matches a whitelisted entry.
+
+        Substring matching is intentionally avoided to prevent policy bypasses
+        such as appending arbitrary shell payloads to allowed commands.
+        """
+
+        def _normalize(tokens):
+            normalized = []
+            for token in tokens:
+                if os.path.sep in token and not token.startswith('-'):
+                    normalized.append(os.path.abspath(token))
+                else:
+                    normalized.append(token)
+            return normalized
+
+        def _strip_python(tokens):
+            if tokens and os.path.basename(tokens[0]).startswith('python'):
+                return tokens[1:]
+            return tokens
+
+        cmd_tokens = _normalize(shlex.split(cmd))
+        cmd_core = _strip_python(cmd_tokens)
+
         allowed = self._data.get('allowed_actions', [])
         for a in allowed:
-            if a.get('type') == 'run_command':
-                for c in a.get('commands', []):
-                    candidate = c.strip()
-                    if cmd.strip() == candidate or candidate in cmd:
+            if a.get('type') != 'run_command':
+                continue
+            for c in a.get('commands', []):
+                candidate_tokens = _normalize(shlex.split(c.strip()))
+                candidate_core = _strip_python(candidate_tokens)
+
+                if cmd_tokens == candidate_tokens or cmd_core == candidate_core:
+                    return True
+
+                # Allow invoking a whitelisted script directly or via "python <script>"
+                if len(candidate_core) == 1 and candidate_core[0].endswith('.py'):
+                    script_basename = os.path.basename(candidate_core[0])
+                    if len(cmd_core) == 1 and os.path.basename(cmd_core[0]) == script_basename:
                         return True
-                    # Allow matching by basename, e.g., /full/path/generate_sample_xlsx.py
-                    try:
-                        base = os.path.basename(candidate)
-                        if base in cmd or cmd.strip().endswith(base):
-                            return True
-                    except Exception:
-                        pass
         return False
 
     def is_script_whitelisted(self, script_path: str) -> bool:
