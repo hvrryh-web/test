@@ -1,0 +1,160 @@
+{
+  "last_node_id": 16,
+  "last_link_id": 16,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "LoadImage",
+      "pos": [-760, -120],
+      "size": [140, 90],
+      "widgets_values": ["inputs/noisy_frame.png", false],
+      "label": "Input Image"
+    },
+    {
+      "id": 2,
+      "type": "MaskFromRoi",
+      "pos": [-560, -120],
+      "size": [200, 100],
+      "widgets_values": [[300, 220, 180, 160]],
+      "label": "Cleanup Mask"
+    },
+    {
+      "id": 3,
+      "type": "ControlNetApply",
+      "pos": [-360, -140],
+      "size": [180, 120],
+      "widgets_values": ["inpaint_global_harmonious", 0.7],
+      "label": "Cleanup ControlNet"
+    },
+    {
+      "id": 4,
+      "type": "Z-Image",
+      "pos": [-360, 60],
+      "size": [140, 80],
+      "widgets_values": [768, 768, 123, "cleanup_seed"],
+      "label": "Z-Image Seed"
+    },
+    {
+      "id": 5,
+      "type": "CLIPTextEncode",
+      "pos": [-140, -140],
+      "size": [240, 140],
+      "widgets_values": ["clean background, remove blemishes, keep clothing intact"],
+      "label": "Prompt"
+    },
+    {
+      "id": 6,
+      "type": "Number",
+      "pos": [-140, 40],
+      "size": [120, 60],
+      "widgets_values": [0.5],
+      "label": "JP Layer: structure"
+    },
+    {
+      "id": 7,
+      "type": "Number",
+      "pos": [-140, 120],
+      "size": [120, 60],
+      "widgets_values": [0.5],
+      "label": "JP Layer: texture"
+    },
+    {
+      "id": 8,
+      "type": "KSampler",
+      "pos": [120, -140],
+      "size": [200, 220],
+      "widgets_values": [25, 8, "dpmpp_2m", 28, 0.65, "cleanup"],
+      "label": "Inpaint Sampler"
+    },
+    {
+      "id": 9,
+      "type": "ESRGANUpscale",
+      "pos": [340, -120],
+      "size": [200, 140],
+      "widgets_values": [1.5, "LDSR"],
+      "label": "Cleanup Upscale"
+    },
+    {
+      "id": 10,
+      "type": "SaveImage",
+      "pos": [580, -140],
+      "size": [150, 100],
+      "widgets_values": ["outputs/image_cleanup.png"],
+      "label": "Save Image"
+    },
+    {
+      "id": 11,
+      "type": "SaveMask",
+      "pos": [580, 40],
+      "size": [150, 100],
+      "widgets_values": ["outputs/image_cleanup_mask.png"],
+      "label": "Save Mask"
+    },
+    {
+      "id": 12,
+      "type": "SaveMetadata",
+      "pos": [780, -40],
+      "size": [200, 120],
+      "widgets_values": ["outputs/image_cleanup.json"],
+      "label": "Export Metadata"
+    },
+    {
+      "id": 13,
+      "type": "MaskToImage",
+      "pos": [780, 120],
+      "size": [180, 100],
+      "label": "Mask Preview"
+    },
+    {
+      "id": 14,
+      "type": "ImageComposite",
+      "pos": [780, -200],
+      "size": [200, 110],
+      "widgets_values": ["overlay"],
+      "label": "Overlay"
+    },
+    {
+      "id": 15,
+      "type": "CLIPTextEncode",
+      "pos": [-360, 220],
+      "size": [220, 130],
+      "widgets_values": ["blemish removal mask"],
+      "label": "Mask Prompt"
+    },
+    {
+      "id": 16,
+      "type": "MaskFromText",
+      "pos": [-560, 220],
+      "size": [180, 110],
+      "widgets_values": [0.35],
+      "label": "Text Mask"
+    }
+  ],
+  "links": [
+    [1, 1, 0, 2, 0, "IMAGE"],
+    [2, 2, 0, 3, 1, "MASK"],
+    [3, 1, 0, 3, 0, "IMAGE"],
+    [4, 4, 0, 8, 0, "LATENT"],
+    [5, 3, 0, 8, 3, "CONTROL_NET"],
+    [6, 5, 0, 8, 5, "CONDITIONING"],
+    [7, 6, 0, 8, 6, "WEIGHT"],
+    [8, 7, 0, 8, 7, "WEIGHT"],
+    [9, 8, 0, 9, 0, "IMAGE"],
+    [10, 9, 0, 10, 0, "IMAGE"],
+    [11, 2, 0, 11, 0, "MASK"],
+    [12, 10, 0, 14, 0, "IMAGE"],
+    [13, 11, 0, 13, 0, "MASK"],
+    [14, 9, 0, 12, 0, "IMAGE"],
+    [15, 5, 0, 12, 1, "TEXT"],
+    [16, 16, 0, 2, 1, "MASK"]
+  ],
+  "groups": [],
+  "extra": {
+    "name": "Image Clean Up",
+    "notes": "Targeted inpainting with ControlNet and JP layer sliders for structure/texture. ESRGAN upscale polishes the cleaned region.",
+    "sample_inputs": {
+      "noisy_frame": "resources/samples/noisy_frame.png"
+    },
+    "sample_prompt": "clean scratches and stains on jacket, keep folds intact"
+  }
+}
