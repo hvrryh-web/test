@@ -1,0 +1,30 @@
+services:
+  comfyui:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        COMFYUI_TAG: ${COMFYUI_TAG:-latest}
+    image: local/comfyui-zimage:${COMFYUI_TAG:-latest}
+    ports:
+      - "8188:8188"
+    environment:
+      - HF_HOME=/models
+      - COMFYUI_MODEL_DIR=/models
+      - USE_GPU=${USE_GPU:-1}
+    volumes:
+      - ${COMFYUI_MODELS_DIR:-../models}:/models
+      - ../workflows:/workflows:ro
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    command: ["python", "main.py", "--listen", "0.0.0.0", "--port", "8188", "--enable-cors-header"]
+    restart: unless-stopped
+
+networks:
+  default:
+    name: comfyui

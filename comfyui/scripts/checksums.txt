@@ -1,0 +1,3 @@
+# sha256sum  relative_path                             download_url
+2079161f9df7524bd9eca5e53ff5911271b8551e0f868b7b5a92b84776df28a3  checkpoints/sd15_README.md  https://huggingface.co/runwayml/stable-diffusion-v1-5/raw/main/README.md
+ae6b19b1bb5627d57aed65ac50ce8c5863827303817d81bbb576092c4ed10210  controlnet/README.md         https://huggingface.co/lllyasviel/ControlNet-v1-1/raw/main/README.md
